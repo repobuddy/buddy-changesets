@@ -1,6 +1,8 @@
 ---
 name: patch-skill
 description: Use this skill when contributing local improvements to an installed skill back to its source repo via PR.
+metadata:
+  internal: true
 ---
 
 # Patch Skill
@@ -36,8 +38,8 @@ Derive paths:
 
 | Input | Upstream path |
 | --- | --- |
-| Lock key / folder name `audit-skill` | `skills/audit-skill/` |
-| `skillPath`: `.agents/skills/create-skill/SKILL.md` | `skills/create-skill/SKILL.md` |
+| Lock key / folder name `audit-skill` | `skills/<skill-name>/` |
+| `skillPath`: `.agents/skills/create-skill/SKILL.md` | `skills/<skill-name>/SKILL.md` |
 | `skillPath`: `skills/fix-security-pr/SKILL.md` | `skills/fix-security-pr/SKILL.md` |
 
 ## Steps

@@ -1,23 +1,35 @@
 ---
 name: create-skill
 description: Use this skill when the user asks to create a new agent skill — scaffold, audit, and link into detected agents.
+metadata:
+  internal: true
 ---
 
 # Create Skill
 
 When the user asks to create a new skill, follow this convention.
 
-## Skill kinds
+## Skill placement
 
-Pick the location from scope before scaffolding:
+Pick the placement before scaffolding:
 
-| Kind | Location | Notes |
+| Placement | Location | Notes |
 | --- | --- | --- |
-| Global | `~/.agents/skills/<name>/` | Personal skills across all projects |
-| Repo internal | `.agents/skills/<name>/` | Contributor tooling; add `metadata: internal: true` |
-| Repo public | `skills/<name>/` | Shipped with a package; users install via `npx skills add` |
+| User | `~/.agents/skills/<name>/` | Personal skills across all projects |
+| Project private | `.agents/skills/<name>/` | Contributor tooling; add `metadata: internal: true` |
+| Project public | `skills/<name>/` | Shipped with a package; users install via `npx skills add` |
 
-Ask the user if the kind is ambiguous.
+## Skill patterns
+
+Capture the workflow shape separately from placement:
+
+| Pattern | When to use it |
+| --- | --- |
+| Process | Ordered multi-step workflow with decision points |
+| Tool-based | Consistent use of tools, systems, or connectors |
+| Standard | Tone, format, structure, or quality enforcement |
+
+Ask the user if the placement or pattern is ambiguous.
 
 ## Directory structure
 
@@ -36,7 +48,7 @@ Global skills live in `~/.agents/skills/<name>/` and are linked into each agent'
 
 ### 1. Create the skill
 
-Determine the skill kind (above), then create the directory at the matching path.
+Determine the skill placement (above), then create the directory at the matching path.
 
 Check whether `npx skills` is available:
 
@@ -116,21 +128,25 @@ ln -sf ~/.agents/skills/<name> ~/.claude/skills/<name>
 
 Adjust the target path for other agents as needed (e.g., `~/.cursor/skills/`, `~/.opencode/skills/`).
 
-## What makes a good skill
+## Skill design governance
 
-- **Decisions over documentation.** Encode what to decide and how — don't repeat reference material the model already knows.
-- **Narrow and composable.** One workflow per skill. Skills can be triggered by situation (user-facing) or called by other skills (sub-skills). Sub-skills have no situational trigger — their `description` should say "Internal skill: called by X" to avoid accidental activation. Neither type should be loaded as ambient context.
-- **No baked-in opinions.** Detect the user's setup (package manager, monorepo shape, tooling) at runtime rather than assuming a specific stack.
+Before writing content, load the **skill-design** governance:
+
+```bash
+npx cyber-skills@<version> governance show skill-design
+```
+
+Read stdout as the authoritative rules for principles, progressive disclosure, description structure, and when to extract deterministic logic to scripts or existing project CLIs.
 
 ## Scripts and CLI output
 
-If the skill includes a `scripts/` directory or documents CLI commands agents run, load the output discipline before authoring or reviewing executable tooling:
+If the skill includes a `scripts/` directory or documents CLI commands agents run, also load **agent-tool-output**:
 
 ```bash
-npx cyber-skills@<version> discipline show agent-tool-output
+npx cyber-skills@<version> governance show agent-tool-output
 ```
 
-Read stdout as the authoritative rules. Prefer `npx cyber-skills@<version> …` CLI subcommands over new bundled `scripts/`.
+Read stdout as the authoritative rules for stdout, JSON, non-interactive paths, and stderr.
 
 ## Notes
 
