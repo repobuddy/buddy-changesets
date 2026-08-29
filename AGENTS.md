@@ -52,3 +52,10 @@ For sub-skills (called by other skills, not triggered by user situation), prefix
 - **Decisions over documentation** — encode what to decide and how, not reference material the model already knows
 - **Narrow and composable** — one workflow per skill; user-facing skills match situations, sub-skills are called explicitly by other skills
 - **No baked-in opinions** — detect the user's setup at runtime rather than assuming a specific stack
+
+<!-- buddy-agent-harness:begin -->
+
+`.claude/skills/` is a generated symlink to `.agents/skills/`; never write to it
+directly. `CLAUDE.md` is a symlink to this file — shared instructions belong here.
+
+<!-- buddy-agent-harness:end -->
