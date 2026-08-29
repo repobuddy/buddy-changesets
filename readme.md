@@ -7,7 +7,7 @@ Skills for AI agents to work with [changesets](https://github.com/changesets/cha
 | Skill | Description |
 | ----- | ----------- |
 | **add-changeset** | Analyse the current change, determine affected packages and bump type, and write a changeset file directly. |
-| **setup-changesets** | Set up changesets in a new or existing repository, including CI release workflow. |
+| **init** | Set up changesets in a new or existing repository, including the CI release workflow and migration off another release tool. |
 
 ## Installation
 

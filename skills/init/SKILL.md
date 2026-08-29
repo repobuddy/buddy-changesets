@@ -1,9 +1,9 @@
 ---
-name: setup-changesets
-description: "Use this skill when setting up changesets, release CI, upgrading the Changesets CLI across a major, or migrating from another release tool. Also when a release job fails with a Changesets CLI/action version mismatch."
+name: init
+description: "Set up changesets in a new or existing repository, or upgrade an existing setup across a major. Use when asked to 'add changesets', 'set up releases', or 'configure versioning'; when migrating from semantic-release, release-it, lerna, release-please, or another release tool; when a release job fails with a Changesets CLI/action version mismatch; or when asked to upgrade changesets from v2 to v3."
 ---
 
-# Setup Changesets
+# Initialize Changesets
 
 ## When to use
 
