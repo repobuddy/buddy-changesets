@@ -1,0 +1,45 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+	"name": "buddy-changesets",
+	"version": "1.0.0",
+	"description": "Changesets skills for AI agents — set up releases and write changeset files.",
+	"homepage": "https://github.com/repobuddy/agent-changesets",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/repobuddy/agent-changesets.git"
+	},
+	"license": "MIT",
+	"keywords": [
+		"agent-skill",
+		"changesets",
+		"claude-code",
+		"cursor",
+		"codex"
+	],
+	"extensions": {
+		"org.cyberuni.universal-plugin": {
+			"skills": "./skills/",
+			"vendors": [
+				"claude-code",
+				"cursor",
+				"codex",
+				"copilot-cli"
+			],
+			"harnesses": {
+				"claude-code": {},
+				"cursor": {
+					"publisher": "repobuddy",
+					"category": "developer-tools",
+					"tags": ["changesets", "release", "versioning"]
+				},
+				"codex": {
+					"interface": {
+						"displayName": "Buddy Changesets",
+						"category": "developer-tools"
+					}
+				},
+				"copilot-cli": {}
+			}
+		}
+	}
+}

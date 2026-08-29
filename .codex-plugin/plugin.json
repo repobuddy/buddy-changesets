@@ -1,0 +1,23 @@
+{
+	"name": "buddy-changesets",
+	"version": "1.0.0",
+	"description": "Changesets skills for AI agents — set up releases and write changeset files.",
+	"homepage": "https://github.com/repobuddy/agent-changesets",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/repobuddy/agent-changesets.git"
+	},
+	"license": "MIT",
+	"keywords": [
+		"agent-skill",
+		"changesets",
+		"claude-code",
+		"cursor",
+		"codex"
+	],
+	"skills": "./skills/",
+	"interface": {
+		"displayName": "Buddy Changesets",
+		"category": "developer-tools"
+	}
+}

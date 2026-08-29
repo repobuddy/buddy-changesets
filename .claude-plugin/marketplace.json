@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "repobuddy-agent-changesets-local",
+  "owner": {
+    "name": "repobuddy"
+  },
+  "plugins": [
+    {
+      "name": "buddy-changesets",
+      "source": "./",
+      "description": "Changesets skills for AI agents — set up releases and write changeset files.",
+      "version": "1.0.0",
+      "homepage": "https://github.com/repobuddy/agent-changesets",
+      "repository": "https://github.com/repobuddy/agent-changesets.git",
+      "license": "MIT",
+      "keywords": [
+        "agent-skill",
+        "changesets",
+        "claude-code",
+        "cursor",
+        "codex"
+      ]
+    }
+  ]
+}
