@@ -1,6 +1,6 @@
 ---
 name: init
-description: "Set up changesets in a new or existing repository, or upgrade an existing setup across a major. Use when asked to 'add changesets', 'set up releases', or 'configure versioning'; when migrating from semantic-release, release-it, lerna, release-please, or another release tool; when a release job fails with a Changesets CLI/action version mismatch; or when asked to upgrade changesets from v2 to v3."
+description: "Use this skill when setting up changesets, adding release CI, upgrading the Changesets CLI across a major, or migrating from another release tool. Also when a release job fails with a Changesets CLI/action version mismatch."
 ---
 
 # Initialize Changesets
@@ -12,19 +12,22 @@ description: "Set up changesets in a new or existing repository, or upgrade an e
 - Migrating from semantic-release, release-it, lerna, release-please, or similar tools
 - Upgrading the CLI across a major, or fixing a `changesets/action` ↔ CLI version mismatch
 
-Not this skill: adding a changeset to an existing PR → use **`add-changeset`** instead.
-
 Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning'`, `'upgrade changesets'`, shared `<org>/.github` release workflow.
 
-## Instructions
+**Not this skill:**
 
-### Step 1 — Detect and gate
+- Adding a changeset to the current PR → use **`add-changeset`**
+- GitHub branch protection / Dependabot only → use **`setup-github-repo`**
 
-**Detect automatically** (do not ask if filesystem answers it):
+## Workflow
+
+### 1. Detect and gate
+
+**Detect automatically** (do not ask if the filesystem answers it):
 
 | Check | How |
 |---|---|
-| Package manager | `pnpm-lock.yaml`, `bun.lock`/`bun.lockb`, `yarn.lock`, `package-lock.yaml` |
+| Package manager | `pnpm-lock.yaml`, `bun.lock`/`bun.lockb`, `yarn.lock`, `package-lock.json` |
 | Monorepo | `pnpm-workspace.yaml`, `workspaces` in root `package.json`, or `bun.workspace.ts` |
 | Already initialized | `.changeset/` directory exists |
 | CLI major | `@changesets/cli` range in root `package.json` |
@@ -33,37 +36,35 @@ Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning
 
 **Competing release tools** — check `package.json` deps and config files:
 
-| Tool | Detection | Migration reference |
-|---|---|---|
-| semantic-release | dep or `.releaserc*` / `release.config.*` / `"release"` in `package.json` | `references/migration/semantic-release.md` |
-| release-it | dep or `.release-it.*` / `"release-it"` in `package.json` | `references/migration/release-it.md` |
-| standard-version | dep or `.versionrc*` / `"standard-version"` in `package.json` | `references/migration/standard-version.md` |
-| beachball | dep or `beachball.config.json` | `references/migration/beachball.md` |
-| release-please | `release-please-config.json` / `.release-please-manifest.json` | `references/migration/release-please.md` |
-| auto (Intuit) | dep or `.autorc*` | `references/migration/auto.md` |
-| Nx Release | `nx` in deps and `"release"` in `nx.json` | `references/migration/nx-release.md` |
-| lerna | `lerna.json` | `references/migration/lerna.md` |
-| bumpp | dep | `references/migration/bumpp.md` |
-| changelogen | dep | `references/migration/changelogen.md` |
+| Tool | Detection |
+|---|---|
+| semantic-release | dep or `.releaserc*` / `release.config.*` / `"release"` in `package.json` |
+| release-it | dep or `.release-it.*` / `"release-it"` in `package.json` |
+| standard-version | dep or `.versionrc*` / `"standard-version"` in `package.json` |
+| beachball | dep or `beachball.config.json` |
+| release-please | `release-please-config.json` / `.release-please-manifest.json` |
+| auto (Intuit) | dep or `.autorc*` |
+| Nx Release | `nx` in deps and `"release"` in `nx.json` |
+| lerna | `lerna.json` |
+| bumpp | dep |
+| changelogen | dep |
 
 **Early exits:**
 
 | Condition | Action |
 |---|---|
-| `.changeset/` already exists | Skip Step 2 init; audit config/scripts/CI only |
-| CLI major ≠ action major, or CLI still v2 | Read `references/migration/cli-v3-upgrade.md` and upgrade — see the pairing table in Step 5. Do not re-run init |
-| Competing tool detected | Ask: migrate to changesets? **No** → stop. **Yes** → read only the matching `references/migration/<tool>.md` file(s), apply removal, then continue |
-| Non-GitHub CI and user expects a Version Packages PR | Explain that pattern is GitHub-only; proceed with `references/ci/_common.md` or stop |
+| `.changeset/` already exists | Skip step 2; audit config/scripts/CI only |
+| CLI major ≠ action major, or CLI still v2 | Read `references/migration/cli-v3-upgrade.md` and upgrade — see the pairing table in step 5. Do not re-run init |
+| Competing tool detected | Ask: migrate to changesets? **No** → stop. **Yes** → load that tool's migration reference, apply removal, then continue |
+| Non-GitHub CI and user expects a Version Packages PR | Explain that pattern is GitHub-only; proceed with the common non-GitHub pattern or stop |
 
 **Ask the user:**
 
-1. Shared workflow in `<org-or-user>/.github`? **Yes** → Option B in Step 5. **No** → inline workflow.
+1. Shared workflow in `<org-or-user>/.github`? **Yes** → Option B in step 5. **No** → inline workflow.
 2. Monorepo: any `fixed` groups (same version always)?
 3. Any packages to `ignore` (private/internal, not published)?
 
-Read reference files **only when detection matches** — never preload all migration or CI files.
-
-### Step 2 — Initialize
+### 2. Initialize
 
 Skip if `.changeset/` already exists.
 
@@ -80,7 +81,7 @@ npx @changesets/cli@3 init
 
 Creates `.changeset/config.json` and `.changeset/README.md`.
 
-### Step 3 — Configure `.changeset/config.json`
+### 3. Configure `.changeset/config.json`
 
 Replace the generated config. Set `baseBranch` to the repo's default branch if not `main`.
 
@@ -114,13 +115,13 @@ Replace the generated config. Set `baseBranch` to the repo's default branch if n
 
 Key decisions:
 
-- `"access": "public"` — required for publishing scoped packages (`@scope/name`) publicly
+- `"access": "public"` — required to publish scoped packages (`@scope/name`) publicly
 - `"fixed"` — packages that must share the exact same version
 - `"linked"` — packages that share the highest bump type but keep independent versions
 - `"ignore"` — excluded from changeset versioning (e.g. `examples`, internal CLIs)
-- `"commit": false` — recommended; CI/action controls commits
+- `"commit": false` — default; CI/action controls commits
 
-### Step 4 — Add scripts to `package.json`
+### 4. Add scripts to `package.json`
 
 ```json
 {
@@ -134,7 +135,7 @@ Key decisions:
 
 If a build must run before publish: `"release": "<pm> build && changeset publish"`.
 
-### Step 5 — CI release workflow
+### 5. CI release workflow
 
 #### The CLI and the action must match majors
 
@@ -194,7 +195,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-Replace `<pm>` and `<install-command>` from Step 1. **Package manager setup:**
+Replace `<pm>` and `<install-command>` from step 1. **Package manager setup:**
 
 pnpm:
 
@@ -289,24 +290,14 @@ jobs:
 
 #### Other CI platforms
 
-Read `references/ci/_common.md` for the non-GitHub pattern, then the platform file:
+Load the common non-GitHub pattern, then the detected platform's file — both listed in References.
 
-| Platform | Reference |
-|---|---|
-| GitLab | `references/ci/gitlab.md` |
-| CircleCI | `references/ci/circleci.md` |
-| Bitbucket | `references/ci/bitbucket.md` |
-| Azure Pipelines | `references/ci/azure-pipelines.md` |
-| Jenkins | `references/ci/jenkins.md` |
-| Travis CI | `references/ci/travis.md` |
-| Drone | `references/ci/drone.md` |
+### 6. Secrets
 
-### Step 6 — Secrets
+- `NPM_TOKEN` — npm automation token, from the npm account's access-token settings
+- `RELEASE_TOKEN` — optional GitHub PAT, only if branch protection blocks the Version Packages PR
 
-- `NPM_TOKEN` — npm automation token ([npm access tokens](https://www.npmjs.com/settings/~account/tokens))
-- `RELEASE_TOKEN` — optional GitHub PAT if branch protection blocks the Version Packages PR
-
-### Step 7 — Verify
+### 7. Verify and hand off
 
 Assert the pairing first — the one check that catches a setup which looks complete and fails on its first release:
 
@@ -329,4 +320,42 @@ On an existing repo with pending changesets, confirm they still parse — this i
 <pm> exec changeset status
 ```
 
-Tell the user to add future changesets via the **`add-changeset`** skill. Never manually edit `CHANGELOG.md` or version bumps — the Version Packages PR is fully generated.
+Tell the user that changeset files are added via the **`add-changeset`** skill, and that versions and `CHANGELOG.md` on the Version Packages PR are generated — never hand-edited.
+
+## Anti-patterns
+
+- Preloading reference files before detection matches them
+- Duplicating `add-changeset`'s bump-type and summary rules here
+- Setting `"commit": true` when CI runs `changesets/action`
+- Promising a Version Packages PR on non-GitHub CI
+
+## References
+
+Load one row only, when step 1 detection matches it.
+
+| Detected tool | Migration reference |
+|---|---|
+| semantic-release | `references/migration/semantic-release.md` |
+| release-it | `references/migration/release-it.md` |
+| standard-version | `references/migration/standard-version.md` |
+| beachball | `references/migration/beachball.md` |
+| release-please | `references/migration/release-please.md` |
+| auto (Intuit) | `references/migration/auto.md` |
+| Nx Release | `references/migration/nx-release.md` |
+| lerna | `references/migration/lerna.md` |
+| bumpp | `references/migration/bumpp.md` |
+| changelogen | `references/migration/changelogen.md` |
+
+Non-GitHub CI — read `references/ci/_common.md` first, then the platform file.
+
+| Detected platform | CI reference |
+|---|---|
+| GitLab | `references/ci/gitlab.md` |
+| CircleCI | `references/ci/circleci.md` |
+| Bitbucket | `references/ci/bitbucket.md` |
+| Azure Pipelines | `references/ci/azure-pipelines.md` |
+| Jenkins | `references/ci/jenkins.md` |
+| Travis CI | `references/ci/travis.md` |
+| Drone | `references/ci/drone.md` |
+
+- Changesets docs — <https://github.com/changesets/changesets>
