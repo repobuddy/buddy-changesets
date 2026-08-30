@@ -1,6 +1,7 @@
 ---
 name: add-changeset
 description: "Internal skill: write a changeset file for the current change. Called by the `changesets` gateway in `add` mode, and by `review-changesets` when a pending changeset is missing."
+user-invocable: false
 ---
 
 # Add Changeset

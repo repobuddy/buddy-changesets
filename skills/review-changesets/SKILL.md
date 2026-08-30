@@ -1,6 +1,7 @@
 ---
 name: review-changesets
 description: "Internal skill: review the pending changesets in `.changeset/` for scope, accuracy, and wording, adding a missing one first. Called by the `changesets` gateway in `review` mode."
+user-invocable: false
 ---
 
 # Review Changesets
