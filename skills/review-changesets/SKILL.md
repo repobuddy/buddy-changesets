@@ -12,11 +12,13 @@ Every pending changeset in `.changeset/` becomes a `CHANGELOG.md` entry verbatim
 
 ## Workflow
 
-### 1. Add the missing changeset first
+### 1. Load the criteria
 
-Load **`add-changeset`** and run it for the current change. If it concludes no changeset is needed, say so and continue to step 2 — reviewing what is already pending is still worthwhile.
+Load **`add-changeset`**. It owns the criteria this skill audits against — what warrants a changeset, which bump type, and the body rules. Do not restate or re-derive them here; a rule that needs changing gets changed there.
 
-Skip this step only when the user asked to review the existing files and nothing else.
+Then run it for the current change, so a missing changeset is written before the review. If it concludes no changeset is needed, say so and continue — reviewing what is already pending is still worthwhile.
+
+Skip the writing half only when the user asked to review the existing files and nothing else.
 
 ### 2. Gather the pending changesets
 
@@ -26,7 +28,7 @@ ls .changeset/*.md
 
 Ignore `README.md` and `config.json`. Read every remaining file, and read `.changeset/config.json` for the `fixed`, `linked`, and `ignore` groups.
 
-Get the changes each one is meant to describe:
+Get the changes those files are meant to describe:
 
 ```bash
 git log origin/main..HEAD --oneline
@@ -35,52 +37,26 @@ git diff --name-only origin/main...HEAD
 
 Substitute the repo's actual base branch when it is not `main`.
 
-### 3. Review each changeset
+### 3. Check each changeset
 
-Apply the checks below. For each finding, note the file, what is wrong, and the fix.
+Four checks. The first two apply `add-changeset`'s criteria to a file that already exists; the last two are review-only — they need the whole set of pending files, which the author of any single changeset could not see.
 
-**Should it exist at all?** Delete the file when the change it describes is invisible to consumers:
+**Does it belong?** Apply `add-changeset`'s **When a Changeset Is Warranted**. A changeset whose change fails that test gets deleted — most often one covering only a `devDependencies` bump, CI or tooling, tests, or an internal refactor. A runtime `dependencies` bump that does qualify usually still needs rewriting to say what changed for the consumer rather than which version moved.
 
-| Delete when the changeset covers only | Because |
-|---|---|
-| `devDependencies` bumps | Consumers never install them |
-| Lockfile, CI, or build-tooling changes | No published artifact changes |
-| Tests, fixtures, or Storybook stories | Not shipped |
-| Internal refactors with no API or behavior change | Nothing for a consumer to act on |
-| Docs, examples, or a `private: true` package | Not published, or not part of the package contract |
+**Is the body up to standard?** Apply `add-changeset`'s **Body rules** and its breaking-change requirement. Fix what falls short; leave a body that already meets the bar alone rather than rewording it for style.
 
-A runtime `dependencies` bump that changes behavior, peer ranges, or the minimum supported version stays — rewrite it to say what changed for the consumer, not which version bumped.
+**Is it accurate?** This is what a review can check and the author could not — the file against what actually landed:
 
-**Is it accurate?** Compare the body against the actual diff and commits:
-
-- The described change actually happened, and happened in the packages listed in the frontmatter
-- No changes are described that were reverted, dropped, or never landed
-- The bump type matches the change: `major` for a break, `minor` for new public API, `patch` for a fix. Packages on `0.x` use `minor` for breaks
+- The described change happened, and happened in the packages listed in the frontmatter
+- Nothing described was later reverted, dropped, or never landed
+- The bump type still matches the final diff, not the intent at the time of writing
 - Every affected package is listed, and all members of a `fixed` group carry the same bump
 - Package names in the frontmatter match `package.json` exactly
 
-**Does it carry breaking-change and migration information?** A `major` (or a `0.x` break) needs the old behavior, the new behavior, and the steps to move between them. A body that says only what was removed is incomplete.
+**Is it redundant?** Across the pending set and the released history:
 
-**Is it concise?** One line for an ordinary change. Cut restated context, hedging, and "this PR" framing. Bullets are for migration steps and genuinely separate changes only.
-
-**Is the prose right?**
-
-- Imperative mood — "Add support for X", not "Added" or "Adds"
-- User-facing effect, not implementation — no file names, function internals, commit SHAs, or PR numbers
-- Complete sentences, ending with a period
-- Correct grammar, spelling, and consistent product and API capitalization
-
-**Is the markdown right?**
-
-- Backticks around every code element: package names, exports, options, props, CLI flags, file paths, and values
-- Fenced code blocks carry a language tag
-- Lists and headings render as markdown — no stray indentation making a paragraph a code block
-- No heading levels in the body; the changelog supplies its own structure
-- Link text is descriptive, and links resolve
-
-**Is it redundant?** Two pending changesets describing the same change get merged into one. A changeset whose change was already released, or which duplicates an entry now in `CHANGELOG.md`, gets deleted.
-
-For the full authoring rules, load **`add-changeset`**.
+- Two pending changesets describing the same change get merged into one
+- A changeset whose change was already released, or which duplicates an entry now in `CHANGELOG.md`, gets deleted
 
 ### 4. Report and apply
 
@@ -95,16 +71,15 @@ Report the findings grouped by file, each with the proposed edit:
   - delete: covers only a devDependency bump of `vitest`
 ```
 
-Apply edits directly. Confirm before deleting a file or changing a bump type — both change what ships. Leave a changeset alone when it is already correct, and say so rather than rewording it for style.
+Apply edits directly. Confirm before deleting a file or changing a bump type — both change what ships.
 
 Do not stage or commit; leave the changes for the user's own commit unless they ask otherwise.
 
 ## Verification
 
 - [ ] Every file in `.changeset/` was read, not just the ones touched on this branch
-- [ ] Each remaining changeset describes a consumer-visible change
-- [ ] Bump types match the actual diff, with `fixed` groups consistent
-- [ ] Breaking changes carry migration steps
-- [ ] Code elements are in backticks; summaries are imperative and end with a period
+- [ ] Each remaining changeset passes `add-changeset`'s warranted test and body rules
+- [ ] Bump types match the final diff, with `fixed` groups consistent
+- [ ] Duplicate and already-released entries are gone
 - [ ] Deletions and bump changes were confirmed with the user
 - [ ] `CHANGELOG.md` was not touched

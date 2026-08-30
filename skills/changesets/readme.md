@@ -19,11 +19,19 @@ To set changesets up in the first place, use **init** instead.
 
 ## What it checks in review mode
 
-- Changesets that should not exist: devDependency bumps, CI and tooling changes, tests, internal refactors, unpublished packages.
-- Bump types that do not match the diff, missing packages, and inconsistent `fixed` groups.
-- Breaking changes without migration steps.
-- Implementation detail, wrong mood, missing backticks, and broken markdown in the body.
-- Duplicate or already-released entries.
+Two of the checks reuse the rules `add-changeset` writes to, so a changeset is
+reviewed against the standard it was authored to:
+
+- **Does it belong** — deletes changesets covering only devDependency bumps, CI
+  and tooling, tests, internal refactors, or unpublished packages.
+- **Is the body up to standard** — implementation detail, wrong mood, missing
+  backticks, broken markdown, breaking changes with no migration steps.
+
+Two are review-only, needing the whole pending set and the final diff:
+
+- **Is it accurate** — bump types against what actually landed, reverted work
+  still described, missing packages, inconsistent `fixed` groups.
+- **Is it redundant** — duplicate or already-released entries.
 
 It edits the files in place and asks first before deleting one or changing a bump type. It never touches `CHANGELOG.md`.
 
@@ -31,5 +39,7 @@ It edits the files in place and asks first before deleting one or changing a bum
 
 The gateway loads these; they are not triggered on their own.
 
-- `add-changeset` — writes the changeset file.
-- `review-changesets` — audits the pending changesets.
+- `add-changeset` — writes the changeset file, and owns the criteria: what
+  warrants a changeset, which bump type, and the body rules.
+- `review-changesets` — audits the pending changesets, loading `add-changeset`
+  for those criteria rather than restating them.

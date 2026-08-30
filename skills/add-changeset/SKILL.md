@@ -10,20 +10,28 @@ Called by the **`changesets`** gateway. It has already confirmed `.changeset/con
 
 A changeset declares which packages are affected by a change, the semver bump type, and a user-facing summary. It lives as a markdown file in `.changeset/` and is consumed automatically by CI to version and publish packages.
 
-## When to Add One
+## When a Changeset Is Warranted
 
-**Add a changeset when the change:**
-- Fixes a bug in a published package (`patch`)
-- Adds a new feature or public API (`minor`)
-- Breaks an existing API or removes something (`major`)
-- Updates a dependency in a way users need to know about (`patch`)
+One test decides it: **can a consumer of the published package observe this change?** These criteria are also what **`review-changesets`** checks pending changesets against.
 
-**Do nothing when:**
-- The change is `ci:`, `chore:`, `test:`, or an internal refactor with no API/behavior change
-- The only changed files are in `examples/`, `docs/`, or non-published packages (check `private: true` and `"ignore"` in `.changeset/config.json`)
-- The only changed files are tests or Storybook stories
-- The change is build-process, CI/CD, or development tooling only
-- The only dependency changes are `devDependencies`
+**Warranted:**
+
+| The change | Bump |
+|---|---|
+| Fixes a bug in a published package | `patch` |
+| Adds a new exported function, class, option, or command | `minor` |
+| Removes or renames public API, or breaks existing usage | `major` |
+| Moves a runtime `dependencies` range in a way that changes behavior, peer requirements, or the minimum supported version | `patch` |
+
+**Not warranted** — say so and stop, or in review, the changeset is deleted:
+
+- `devDependencies` bumps, lockfile churn
+- CI/CD, build-process, or development tooling only
+- Tests, fixtures, or Storybook stories
+- Internal refactors with no API or behavior change
+- `examples/`, `docs/`, or a `private: true` package (also check `"ignore"` in `.changeset/config.json`)
+
+A `chore:`, `ci:`, `test:`, or `docs:` commit almost always lands here — but classify from the diff, not from the prefix alone.
 
 Tell the user no changeset is needed and why.
 
@@ -81,15 +89,11 @@ Use the commit message body / subject as a starting point for the changeset summ
 
 ### 3. Determine bump type
 
-| Change type | Bump |
-|---|---|
-| Removes or renames public API, breaks existing usage | `major` |
-| Adds new exported function, class, option, or command | `minor` |
-| Bug fix, internal refactor, dependency update | `patch` |
+Use the bump column in **When a Changeset Is Warranted** above, with two adjustments:
 
 > **Pre-1.0 rule:** For packages on `0.x`, use `minor` for breaking changes — this is standard semver for pre-release packages. Only assign `major` to packages at `1.0.0` or higher.
 
-When unsure between minor and patch, ask the user.
+All members of a `fixed` group carry the same bump type. When unsure between minor and patch, ask the user.
 
 ### 4. Write the changeset file
 
@@ -108,7 +112,41 @@ Add `retry` option to fetch client.
 - For packages in a `fixed` group, list every package in the group with the same bump type
 - The body is the user-facing summary (see summary rules below)
 
-**Summary** — appears verbatim in `CHANGELOG.md`: imperative mood, user-facing effect, ends with a period, code identifiers in backticks, no internal file names or commit SHAs. For breaking changes, add a `Migration:` bullet list.
+**Body rules** — the body appears verbatim in `CHANGELOG.md`, so it is written to a changelog's standard. **`review-changesets`** audits pending changesets against this same list.
+
+*Substance:*
+- User-facing: describe the effect, not the implementation
+- Concise: one line for an ordinary change. No restated context, no hedging, no "this PR" framing
+- Bullets only for migration steps or genuinely separate changes
+- No internal file names, function internals, commit SHAs, or PR numbers
+
+*Prose:*
+- Imperative mood: "Add support for X", not "Added" or "Adds"
+- Complete sentences ending with a period (`.`)
+- Correct grammar and spelling; consistent product and API capitalization
+
+*Markdown:*
+- Backticks around every code element: package names, exports, options, props, CLI flags, file paths, and values
+- Fenced code blocks carry a language tag
+- No heading levels — the changelog supplies its own structure
+- Lists render as lists; no stray indentation turning a paragraph into a code block
+- Descriptive link text, and links that resolve
+
+Good: `Add \`retry\` option to fetch client.`
+Bad: `Updated fetchClient.ts to handle retries in the error handler`
+
+**Breaking changes** — a `major` (or a `0.x` break) must give the old behavior, the new behavior, and the steps between them:
+
+```markdown
+---
+"package-name": major
+---
+
+Remove deprecated `oldOption` config key. Use `newOption` instead.
+
+Migration:
+- Replace `oldOption: true` with `newOption: true`
+```
 
 ### 5. Commit the changeset
 
