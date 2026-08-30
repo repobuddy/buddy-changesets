@@ -29,11 +29,66 @@ One test decides it: **can a consumer of the published package observe this chan
 - CI/CD, build-process, or development tooling only
 - Tests, fixtures, or Storybook stories
 - Internal refactors with no API or behavior change
-- `examples/`, `docs/`, or a `private: true` package (also check `"ignore"` in `.changeset/config.json`)
+- `examples/`, `docs/`, or an ignored package (check `"ignore"` in `.changeset/config.json`)
+- A `private: true` package — **unless** the config sets `privatePackages.version`, which means the
+  package is released by tag rather than by npm, and its changes are as observable as any published
+  package's
 
 A `chore:`, `ci:`, `test:`, or `docs:` commit almost always lands here — but classify from the diff, not from the prefix alone.
 
 Tell the user no changeset is needed and why.
+
+When the changed files are agent configuration — skills, subagents, commands, hooks, or a plugin
+manifest — **Agent Configuration as a Published Surface** below extends both lists and overrides the
+`docs/` exclusion. It applies to that repo's product, not to the config that steers agents working
+in an ordinary code repo.
+
+## Agent Configuration as a Published Surface
+
+When the repo's product is agent configuration — skills, subagents, commands, hooks, MCP servers, a
+plugin manifest — the same consumer test applies, but the consumer installs prose. The text *is* the
+behavior, so there is no cosmetic tier, and a runtime's plugin cache is keyed by version: content
+that ships without a bump never reaches anyone. **Every change to shipped agent config is at least
+`patch`.**
+
+### Which files ship
+
+The manifest decides, never the directory name. Read whichever are present — `plugin.json`,
+`.claude-plugin/plugin.json`, `.cursor-plugin/`, `.codex-plugin/`, any `marketplace.json` — and take
+their path fields (`skills`, `agents`, `commands`, `hooks`, `mcpServers`) as the shipped trees. Fall
+back to `package.json` `"files"` when the repo publishes to npm.
+
+Everything outside those trees is repo-local config, not product — `.agents/`, `.claude/`,
+`.cursor/`, `.github/`, `AGENTS.md`, `CLAUDE.md`, and any skill whose frontmatter carries
+`metadata.internal: true`. No changeset. A repo *may* ship from `.agents/skills`; if its manifest
+says so, that tree is product.
+
+Resolve symlinks before counting a file. `.claude/skills` is commonly a generated bridge into the
+shipped tree — a change surfacing there is the same change, not a second one.
+
+### Which bump
+
+One question decides: **what would an agent following the new text do differently?**
+
+| The change | Bump |
+|---|---|
+| Nothing differs, or the same work is done more reliably — sharpened wording, reordered steps, typo, corrected link or example | `patch` |
+| Instructions that produced wrong results are fixed — a wrong flag, a dead path, a command that fails, guidance that led the agent astray | `patch` |
+| A tool or CLI version referenced in the body moves | `patch` |
+| A new skill, subagent, command, hook, or MCP server is added | `minor` |
+| An existing skill gains a mode, option, step, or reference file consumers can now use | `minor` |
+| A `description` broadens so the skill triggers in situations it did not before | `minor` |
+| Guidance is extended to a case it did not handle — another stack, another tool, another harness | `minor` |
+| A vendor or harness target is added to the manifest | `minor` |
+| A shipped skill, command, agent, or hook is removed or renamed, including the name a user types | `major` |
+| A `description` narrows so the skill stops triggering where it used to — it silently stops firing | `major` |
+| A default changes so the same request produces a materially different result: different files written, different tool chosen, different output shape | `major` |
+| A user-invocable skill becomes internal, or moves behind a gateway | `major` |
+| A reference file or script loaded by path is removed or renamed | `major` |
+| A new prerequisite appears — a tool, CLI, or harness version consumers may not have | `major` |
+| A vendor or harness target is dropped from the manifest | `major` |
+
+The pre-1.0 rule below applies here too: on `0.x`, a break is `minor`.
 
 ## Steps
 
@@ -44,6 +99,8 @@ Read `.changeset/config.json` to find:
 - `"linked"` — packages that share the highest bump type but keep independent versions
 - `"ignore"` — packages excluded from versioning
 - `"access"` — `"public"` means scoped packages publish publicly
+- `"privatePackages"` — `{ "version": true }` means `private: true` packages are still versioned and
+  tagged; the repo releases by tag instead of by npm publish
 
 ### 2. Identify affected packages
 
@@ -67,6 +124,10 @@ In a monorepo (has `pnpm-workspace.yaml`, `workspaces` in root `package.json`, o
 
 In a single-package repo, the root package is always the affected package.
 
+Nearest-`package.json` is the wrong rule for agent config, which routinely sits at the repo root
+while the manifest that ships it lives in a package. Map a changed config file to the package whose
+manifest declares that tree; fall back to the nearest `package.json` only when no manifest claims it.
+
 ### 2a. Extract context from commit messages
 
 When scope is **no local changes** (case 3), also read recent commits for context:
@@ -89,7 +150,8 @@ Use the commit message body / subject as a starting point for the changeset summ
 
 ### 3. Determine bump type
 
-Use the bump column in **When a Changeset Is Warranted** above, with two adjustments:
+Use the bump column in **When a Changeset Is Warranted** above — or in **Agent Configuration as a
+Published Surface** for shipped agent config — with two adjustments:
 
 > **Pre-1.0 rule:** For packages on `0.x`, use `minor` for breaking changes — this is standard semver for pre-release packages. Only assign `major` to packages at `1.0.0` or higher.
 
@@ -165,12 +227,19 @@ Once the changeset is merged to the base branch, the CI release workflow (`chang
 1. Open or update a **"Version Packages"** PR that bumps `package.json` versions and updates `CHANGELOG.md`
 2. When that PR is merged, publish to npm and create GitHub releases
 
+In a plugin repo, the release also carries the new number from `package.json` into the plugin
+manifests — `universal-plugin publish sync-version` then `plugin build`, where that toolchain is in
+use. Never hand-edit a `version` field in `plugin.json` or a vendor manifest; it is derived, the same
+way `CHANGELOG.md` is.
+
 The gateway's boundaries apply: never edit `CHANGELOG.md`, and never add a changeset to a "Version Packages" PR.
 
 ## Verification
 
 - [ ] File exists in `.changeset/` with a descriptive or slug filename
 - [ ] Frontmatter lists all affected packages with the correct bump type
+- [ ] Every changed agent-config file was called shipped or internal from the manifest, not the path
+- [ ] Shipped agent-config changes carry at least a `patch`, lifted where the behavior test says so
 - [ ] All packages in any `fixed` group are included together
 - [ ] Summary is consumer-focused — no internal file names or commit SHAs
 - [ ] Code identifiers are wrapped in backticks
