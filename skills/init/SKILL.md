@@ -29,6 +29,7 @@ Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning
 |---|---|
 | Package manager | `pnpm-lock.yaml`, `bun.lock`/`bun.lockb`, `yarn.lock`, `package-lock.json` |
 | Monorepo | `pnpm-workspace.yaml`, `workspaces` in root `package.json`, or `bun.workspace.ts` |
+| Agent plugin repo | root `plugin.json`, `.claude-plugin/`, or `.agents/universal-plugin.json` — the product is skills and commands installed from a marketplace, and the repo may publish nothing to npm |
 | Already initialized | `.changeset/` directory exists |
 | CLI major | `@changesets/cli` range in root `package.json` |
 | Action major | `changesets/action@` ref in the release workflow — follow a `uses:` to the shared workflow first |
@@ -63,6 +64,8 @@ Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning
 1. Shared workflow in `<org-or-user>/.github`? **Yes** → Option B in step 5. **No** → inline workflow.
 2. Monorepo: any `fixed` groups (same version always)?
 3. Any packages to `ignore` (private/internal, not published)?
+4. Plugin repo with nothing on npm: confirm the release is a tag and a marketplace update rather
+   than an `npm publish`.
 
 ### 2. Initialize
 
@@ -113,6 +116,32 @@ Replace the generated config. Set `baseBranch` to the repo's default branch if n
 }
 ```
 
+**Agent plugin repo (no npm publish):**
+
+```json
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "baseBranch": "main",
+  "privatePackages": { "version": true, "tag": true }
+}
+```
+
+Changesets versions a project it never publishes, but it only ever writes a `package.json` — that is
+where the number lives. A plugin repo without one needs a minimal file, nothing more:
+
+```json
+{
+  "name": "my-plugin",
+  "private": true,
+  "version": "0.0.1"
+}
+```
+
+`privatePackages` then lets changesets bump and tag it; the tag is what triggers the real release.
+Leave `"access"` out — nothing publishes to npm.
+
 Key decisions:
 
 - `"access": "public"` — required to publish scoped packages (`@scope/name`) publicly
@@ -120,6 +149,8 @@ Key decisions:
 - `"linked"` — packages that share the highest bump type but keep independent versions
 - `"ignore"` — excluded from changeset versioning (e.g. `examples`, internal CLIs)
 - `"commit": false` — default; CI/action controls commits
+- `"privatePackages"` — `{ "version": true, "tag": true }` versions and tags a `private: true`
+  project so a non-npm release can hang off the tag
 
 ### 4. Add scripts to `package.json`
 
@@ -134,6 +165,22 @@ Key decisions:
 ```
 
 If a build must run before publish: `"release": "<pm> build && changeset publish"`.
+
+**Plugin repo:** there is no `release` script — nothing goes to npm. Instead `version` chains the
+step that carries the released number out of `package.json` into the plugin manifests, which are
+derived and must never be hand-edited. Detect the toolchain rather than assuming one: where
+`.agents/universal-plugin.json` exists, that step is
+
+```json
+{
+  "scripts": {
+    "version": "changeset version && universal-plugin publish sync-version && universal-plugin plugin build",
+    "cs": "changeset"
+  }
+}
+```
+
+Otherwise use whatever command the repo already has for propagating the version to its manifests.
 
 ### 5. CI release workflow
 
@@ -194,6 +241,10 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
+
+**Plugin repo:** drop the `publish:` input and `NPM_TOKEN`. With `version:` alone the action opens
+the Version Packages PR, and merging it tags the release; the marketplace update is a separate job
+triggered on that tag.
 
 Replace `<pm>` and `<install-command>` from step 1. **Package manager setup:**
 
@@ -294,7 +345,8 @@ Load the common non-GitHub pattern, then the detected platform's file — both l
 
 ### 6. Secrets
 
-- `NPM_TOKEN` — npm automation token, from the npm account's access-token settings
+- `NPM_TOKEN` — npm automation token, from the npm account's access-token settings; not needed by a
+  plugin repo that publishes nothing to npm
 - `RELEASE_TOKEN` — optional GitHub PAT, only if branch protection blocks the Version Packages PR
 
 ### 7. Verify and hand off
@@ -328,6 +380,8 @@ Tell the user that changeset files are added via the **`changesets`** skill, and
 - Duplicating `add-changeset`'s bump-type and summary rules here
 - Setting `"commit": true` when CI runs `changesets/action`
 - Promising a Version Packages PR on non-GitHub CI
+- Hand-editing a version in `plugin.json` or a vendor manifest, or running a plugin CLI's own
+  `version` command in a changesets repo — it picks a number changesets is about to pick again
 
 ## References
 
