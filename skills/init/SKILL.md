@@ -16,7 +16,7 @@ Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning
 
 **Not this skill:**
 
-- Adding a changeset to the current PR → use **`add-changeset`**
+- Adding or reviewing a changeset on the current PR → use **`changesets`**
 - GitHub branch protection / Dependabot only → use **`setup-github-repo`**
 
 ## Workflow
@@ -320,7 +320,7 @@ On an existing repo with pending changesets, confirm they still parse — this i
 <pm> exec changeset status
 ```
 
-Tell the user that changeset files are added via the **`add-changeset`** skill, and that versions and `CHANGELOG.md` on the Version Packages PR are generated — never hand-edited.
+Tell the user that changeset files are added via the **`changesets`** skill, and that versions and `CHANGELOG.md` on the Version Packages PR are generated — never hand-edited.
 
 ## Anti-patterns
 

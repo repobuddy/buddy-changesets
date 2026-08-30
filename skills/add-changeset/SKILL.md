@@ -1,9 +1,13 @@
 ---
 name: add-changeset
-description: "Use this skill when a published-package change needs a changeset (monorepos supported)."
+description: "Internal skill: write a changeset file for the current change. Called by the `changesets` gateway in `add` mode, and by `review-changesets` when a pending changeset is missing."
 ---
 
 # Add Changeset
+
+Called by the **`changesets`** gateway. It has already confirmed `.changeset/config.json` exists.
+
+A changeset declares which packages are affected by a change, the semver bump type, and a user-facing summary. It lives as a markdown file in `.changeset/` and is consumed automatically by CI to version and publish packages.
 
 ## When to Add One
 
@@ -25,11 +29,6 @@ Tell the user no changeset is needed and why.
 ## Steps
 
 ### 1. Detect the setup
-
-```bash
-# Confirm changesets is initialized
-ls .changeset/config.json
-```
 
 Read `.changeset/config.json` to find:
 - `"fixed"` — packages that share the exact same version; bumping one bumps all
@@ -120,6 +119,14 @@ git commit -m "docs: add changeset"
 ```
 
 If staged or unstaged changes existed (scope cases 1 or 2), tell the user the changeset file has been created and let them include it in their own commit.
+
+## What Happens Next (don't intervene)
+
+Once the changeset is merged to the base branch, the CI release workflow (`changesets/action`) will automatically:
+1. Open or update a **"Version Packages"** PR that bumps `package.json` versions and updates `CHANGELOG.md`
+2. When that PR is merged, publish to npm and create GitHub releases
+
+The gateway's boundaries apply: never edit `CHANGELOG.md`, and never add a changeset to a "Version Packages" PR.
 
 ## Verification
 

@@ -6,7 +6,7 @@ Sets up [changesets](https://github.com/changesets/changesets) in a repository: 
 
 Ask for it directly, or say something like "add changesets", "set up releases", or "configure versioning". It also fits when the release workflow is missing or broken, or when you want to move from semantic-release, release-it, lerna, release-please, or a similar tool.
 
-To add a changeset to an existing setup, use **add-changeset** instead.
+To add or review a changeset in an existing setup, use **changesets** instead.
 
 ## What it does
 
