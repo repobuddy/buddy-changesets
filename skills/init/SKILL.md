@@ -242,9 +242,9 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-**Plugin repo:** drop the `publish:` input and `NPM_TOKEN`. With `version:` alone the action opens
-the Version Packages PR, and merging it tags the release; the marketplace update is a separate job
-triggered on that tag.
+**Plugin repo:** drop the `publish-script:` input and `NPM_TOKEN` (`publish:` on action v1). With the
+version script alone the action opens the Version Packages PR, and merging it tags the release; the
+marketplace update is a separate job triggered on that tag.
 
 Replace `<pm>` and `<install-command>` from step 1. **Package manager setup:**
 
