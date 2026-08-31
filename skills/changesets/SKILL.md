@@ -1,6 +1,7 @@
 ---
 name: changesets
 description: "Use this skill for changeset work on an existing setup — write a changeset for the current change, or review the pending changesets in `.changeset/` before merging. Triggers on 'add a changeset', 'add cs', a missing-changeset CI failure, 'review the changesets', or 'check the changeset wording'."
+argument-hint: '[add | review]'
 ---
 
 # Changesets
