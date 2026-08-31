@@ -1,4 +1,4 @@
-# agent-changesets
+# buddy-changesets
 
 Skills for AI agents to work with [changesets](https://github.com/changesets/changesets) — the versioning and changelog tool for JavaScript/TypeScript packages.
 
@@ -15,11 +15,11 @@ Skills for AI agents to work with [changesets](https://github.com/changesets/cha
 
 ```bash
 # Install all skills globally
-npx skills add repobuddy/agent-changesets --all -g
+npx skills add repobuddy/buddy-changesets --all -g
 
 # Install a specific skill
-npx skills add repobuddy/agent-changesets --skill changesets -g
+npx skills add repobuddy/buddy-changesets --skill changesets -g
 
 # Install for a specific agent
-npx skills add repobuddy/agent-changesets --skill changesets -a claude-code -g
+npx skills add repobuddy/buddy-changesets --skill changesets -a claude-code -g
 ```

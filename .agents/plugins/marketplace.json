@@ -1,7 +1,7 @@
 {
-  "name": "repobuddy-agent-changesets-local",
+  "name": "repobuddy-buddy-changesets-local",
   "interface": {
-    "displayName": "repobuddy-agent-changesets-local"
+    "displayName": "repobuddy-buddy-changesets-local"
   },
   "plugins": [
     {

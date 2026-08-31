@@ -1,10 +1,10 @@
 {
-  "name": "agent-changesets",
+  "name": "buddy-changesets",
   "version": "1.0.0",
   "description": "Changesets skills for AI agents",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cyberuni/agent-changesets.git"
+    "url": "https://github.com/repobuddy/buddy-changesets.git"
   },
   "keywords": [
     "agent-skill",
