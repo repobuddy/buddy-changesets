@@ -7,10 +7,7 @@
 		"name": "repobuddy"
 	},
 	"homepage": "https://github.com/repobuddy/buddy-changesets",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/repobuddy/buddy-changesets.git"
-	},
+	"repository": "https://github.com/repobuddy/buddy-changesets.git",
 	"license": "MIT",
 	"keywords": [
 		"agent-skill",
