@@ -27,7 +27,7 @@ Pick from what the user asked for:
 
 **Not this skill:**
 
-- Setting up changesets, the release workflow, or migrating off another release tool → use **`init`**
+- Setting up changesets, the release workflow, or migrating off another release tool → use **`init-changesets`**
 - Versioning or publishing by hand → don't; the release workflow does it (see below)
 
 ## Preflight
@@ -38,7 +38,7 @@ Both modes require an initialized setup:
 ls .changeset/config.json
 ```
 
-Missing → tell the user changesets is not set up and offer the **`init`** skill. Do not create `.changeset/` here.
+Missing → tell the user changesets is not set up and offer the **`init-changesets`** skill. Do not create `.changeset/` here.
 
 ## Boundaries for both modes
 

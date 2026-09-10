@@ -6,7 +6,7 @@ Gateway for changeset work in a repository that already has [changesets](https:/
 
 Ask for it directly, or say something like "add a changeset", "add cs", "review the changesets", or "check the changeset wording". It also fits when CI fails for a missing changeset.
 
-To set changesets up in the first place, use **init** instead.
+To set changesets up in the first place, use **init-changesets** instead.
 
 ## Modes
 

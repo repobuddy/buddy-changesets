@@ -7,7 +7,7 @@ Skills for AI agents to work with [changesets](https://github.com/changesets/cha
 | Skill | Description |
 | ----- | ----------- |
 | **changesets** | Gateway for an existing setup. `add` writes a changeset for the current change; `review` also audits every pending changeset for scope, bump accuracy, and wording. |
-| **init** | Set up changesets in a new or existing repository, including the CI release workflow and migration off another release tool. |
+| **init-changesets** | Set up changesets in a new or existing repository, including the CI release workflow and migration off another release tool. |
 
 `changesets` loads the `add-changeset` and `review-changesets` sub-skills; install them alongside it.
 

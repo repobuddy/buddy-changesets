@@ -1,5 +1,5 @@
 ---
-name: init
+name: init-changesets
 description: "Use this skill when setting up changesets, adding release CI, upgrading the Changesets CLI across a major, or migrating from another release tool. Also when a release job fails with a Changesets CLI/action version mismatch."
 ---
 
