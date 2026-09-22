@@ -23,7 +23,7 @@ Pick from what the user asked for:
 | "review the changesets", "check the changeset wording", "are the changesets right", pre-merge or pre-release cleanup | `review` |
 | Names a mode explicitly (`changesets add`, `changesets review`) | that mode |
 
-`review` is a superset of `add`: it writes a changeset for the current change when one is missing, then audits every file in `.changeset/`. When the request is ambiguous and `.changeset/` already holds pending changesets, prefer `review`.
+`review` is a superset of `add`: it writes a changeset for the current change when one is missing, then audits every file in `.changeset/`. When the request is ambiguous or names no mode, default to `add`; run `review` only when the user asks for it.
 
 **Not this skill:**
 

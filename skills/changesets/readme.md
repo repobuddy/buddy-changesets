@@ -15,7 +15,7 @@ To set changesets up in the first place, use **init-changesets** instead.
 | `add` | Works out which packages the current change affects, picks the bump type, and writes the changeset file. |
 | `review` | Adds a missing changeset, then reads every pending file in `.changeset/` and checks scope, bump accuracy, breaking-change and migration detail, wording, and markdown. |
 
-`review` is the superset — use it before merging or cutting a release, when pending changesets are already sitting in `.changeset/`.
+`add` is the default when the request names no mode. `review` is the superset — ask for it before merging or cutting a release, when pending changesets are already sitting in `.changeset/`.
 
 ## What it checks in review mode
 
