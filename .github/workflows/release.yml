@@ -17,15 +17,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
       - name: Create Release PR or Tag
         uses: changesets/action@v2
         with:
-          version-script: npm run version
+          version-script: pnpm run version
           github-token: ${{ secrets.GITHUB_TOKEN }}

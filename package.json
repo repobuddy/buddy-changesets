@@ -1,26 +1,20 @@
 {
-  "name": "buddy-changesets",
-  "version": "2.0.0",
-  "private": true,
-  "description": "Changesets skills for AI agents",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/repobuddy/buddy-changesets.git"
-  },
-  "keywords": [
-    "agent-skill",
-    "changesets",
-    "claude-code",
-    "cursor",
-    "codex"
-  ],
-  "license": "MIT",
-  "scripts": {
-    "version": "changeset version && universal-plugin publish sync-version && universal-plugin plugin build",
-    "cs": "changeset"
-  },
-  "devDependencies": {
-    "@changesets/cli": "^3.0.2",
-    "universal-plugin": "^0.7.0"
-  }
+	"name": "buddy-changesets-monorepo",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "turbo build",
+		"cs": "changeset",
+		"version": "changeset version && universal-plugin publish sync-version --root packages/buddy-changesets && universal-plugin plugin build --root packages/buddy-changesets",
+		"web": "pnpm --filter website"
+	},
+	"devDependencies": {
+		"@changesets/cli": "^3.0.2",
+		"turbo": "^2.10.8",
+		"universal-plugin": "^0.7.0"
+	},
+	"packageManager": "pnpm@11.25.0",
+	"engines": {
+		"node": ">=22"
+	}
 }

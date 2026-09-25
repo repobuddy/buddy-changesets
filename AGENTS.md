@@ -24,15 +24,33 @@ When reading any `SKILL.md` file, always check whether a `SKILL.local.md` exists
 
 ## What This Repo Is
 
-Skills for AI agents to work with [changesets](https://github.com/changesets/changesets) — the versioning and changelog tool for JavaScript/TypeScript packages.
+A pnpm monorepo for the buddy-changesets plugin — skills for AI agents to work with
+[changesets](https://github.com/changesets/changesets), the versioning and changelog tool
+for JavaScript/TypeScript packages.
 
-## No Build or Test System
+```text
+apps/web/                    Astro Starlight documentation site, deployed to GitHub Pages
+packages/buddy-changesets/   the plugin: plugin.json, vendor manifests, skills
+```
 
-Pure markdown. No build, lint, or test commands. The `npx skills` CLI is used by consumers to install skills, not by contributors.
+The plugin is distributed from its subdirectory in this repository (git source and the
+marketplace catalogs at the repository root). It is not published to npm, so
+`packages/buddy-changesets` stays `private`.
+
+## Build and Test
+
+The plugin is pure markdown — nothing to build or test. The only build in the repo is the
+docs site.
+
+```bash
+pnpm install
+pnpm web dev      # run the docs site
+pnpm build        # turbo build — builds apps/web
+```
 
 ## Adding a New Skill
 
-Create `skills/<skill-name>/SKILL.md` with this structure:
+Create `packages/buddy-changesets/skills/<skill-name>/SKILL.md` with this structure:
 
 ```markdown
 ---
@@ -52,6 +70,9 @@ For sub-skills (called by other skills, not triggered by user situation), prefix
 - **Decisions over documentation** — encode what to decide and how, not reference material the model already knows
 - **Narrow and composable** — one workflow per skill; user-facing skills match situations, sub-skills are called explicitly by other skills
 - **No baked-in opinions** — detect the user's setup at runtime rather than assuming a specific stack
+
+A new user-facing skill also needs a page under `apps/web/src/content/docs/skills/` and a
+sidebar entry in `apps/web/astro.config.mjs`.
 
 <!-- buddy-agent-harness:begin -->
 

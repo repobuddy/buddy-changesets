@@ -2,6 +2,8 @@
 
 Skills for AI agents to work with [changesets](https://github.com/changesets/changesets) — the versioning and changelog tool for JavaScript/TypeScript packages.
 
+Documentation: <https://repobuddy.github.io/buddy-changesets>
+
 ## Skills
 
 | Skill | Description |
@@ -13,6 +15,9 @@ Skills for AI agents to work with [changesets](https://github.com/changesets/cha
 
 ## Installation
 
+The plugin lives in `packages/buddy-changesets` and is installed straight from this
+repository — it is not published to npm.
+
 ```bash
 # Install all skills globally
 npx skills add repobuddy/buddy-changesets --all -g
@@ -22,4 +27,26 @@ npx skills add repobuddy/buddy-changesets --skill changesets -g
 
 # Install for a specific agent
 npx skills add repobuddy/buddy-changesets --skill changesets -a claude-code -g
+```
+
+For Claude Code, add the marketplace and install the plugin:
+
+```text
+/plugin marketplace add repobuddy/buddy-changesets
+/plugin install buddy-changesets@repobuddy-buddy-changesets-local
+```
+
+## Repository layout
+
+```text
+apps/web/                    Astro Starlight documentation site (GitHub Pages)
+packages/buddy-changesets/   the plugin: manifests, vendor manifests, skills
+```
+
+## Development
+
+```bash
+pnpm install
+pnpm web dev      # run the docs site locally
+pnpm cs           # write a changeset
 ```
