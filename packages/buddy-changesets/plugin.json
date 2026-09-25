@@ -6,7 +6,7 @@
 	"author": {
 		"name": "repobuddy"
 	},
-	"homepage": "https://github.com/repobuddy/buddy-changesets",
+	"homepage": "https://repobuddy.github.io/buddy-changesets",
 	"repository": "https://github.com/repobuddy/buddy-changesets.git",
 	"license": "MIT",
 	"keywords": [
