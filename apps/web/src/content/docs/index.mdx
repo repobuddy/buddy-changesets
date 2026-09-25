@@ -1,0 +1,46 @@
+---
+title: Buddy Changesets
+description: Skills for AI agents to work with changesets — set up releases and write changeset files.
+template: splash
+hero:
+  tagline: Portable agent skills for changesets, the versioning and changelog tool for JavaScript and TypeScript packages.
+  actions:
+    - text: Install
+      link: /buddy-changesets/install/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/repobuddy/buddy-changesets
+      icon: external
+      variant: minimal
+---
+
+## What it does
+
+Buddy Changesets gives your coding agent two workflows around
+[changesets](https://github.com/changesets/changesets): setting the tool up in a
+repository, and living with it afterwards — writing a changeset for the change in front
+of it, and auditing the pending ones before a release.
+
+The skills decide rather than document. They classify a diff into a bump type, judge
+whether a change is observable to a consumer at all, and hold a changeset body to the
+standard a changelog entry needs, because every pending file ships verbatim into
+`CHANGELOG.md`.
+
+## The skills
+
+| Skill | What it does |
+| ----- | ------------ |
+| [`changesets`](/buddy-changesets/skills/changesets/) | Gateway for a repository that already has changesets. `add` writes a changeset for the current change; `review` audits every pending one. |
+| [`init-changesets`](/buddy-changesets/skills/init-changesets/) | Sets changesets up — config, scripts, CI release workflow — and migrates off another release tool. |
+| [`add-changeset`](/buddy-changesets/skills/add-changeset/) | Sub-skill. Writes the file and owns the criteria: what warrants a changeset, which bump, and the body rules. |
+| [`review-changesets`](/buddy-changesets/skills/review-changesets/) | Sub-skill. Audits the pending changesets against those same criteria. |
+
+## Try it
+
+With the plugin installed, ask your agent:
+
+```text
+add a changeset
+review the changesets before I merge
+set up changesets in this repo
+```
