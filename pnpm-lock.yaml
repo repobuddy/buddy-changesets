@@ -15,8 +15,8 @@ importers:
         specifier: ^2.10.8
         version: 2.11.3
       universal-plugin:
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.9.0
+        version: 0.9.0
 
   apps/web:
     dependencies:
@@ -700,6 +700,11 @@ packages:
   '@pnpm/deps.graph-sequencer@1100.0.1':
     resolution: {integrity: sha512-pOr5+q1fLYKwFN3LAJuGZEnfXDcQ73zqgDHMtGy+K+uIoUqyY+6MeDCWFwfu+4EFuq76I5EPFofoNAI+Bmmq4A==}
     engines: {node: '>=22.13'}
+
+  '@repobuddy/upx@0.1.1':
+    resolution: {integrity: sha512-WBLoxQFQN41VmhX/GZ5PNZl8G54VmUL1ovHO1/w5RqOxVSFyOd8RhXrIITq7SVnQMaWJE7GvCmHoDsV+tqf2Cw==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   '@rolldown/binding-android-arm-eabi@1.2.10':
     resolution: {integrity: sha512-bp9svZb+QurZeh+8H4BhrZkifEB0YBNvTVzNSJnJQkj4NrRwmQoDUCGP0vSN7PbvLeM7l1tK6GXL8mrTiH2myg==}
@@ -1842,8 +1847,8 @@ packages:
   unist-util-visit@5.1.0:
     resolution: {integrity: sha512-m+vIdyeCOpdr/QeQCu2EzxX/ohgS8KbnPDgFni4dQsfSCtpz8UqDyY5GjRru8PDKuYn7Fq19j1CQ+nJSsGKOzg==}
 
-  universal-plugin@0.7.0:
-    resolution: {integrity: sha512-bbFvnyR2AhA6LTOdWJeiMlNR0UJKw6Y8b/UtOmStBCO2K5uHA6gbpBOZPmb+xU6+kCc1ImX4KmOWPuxPdO6tPg==}
+  universal-plugin@0.9.0:
+    resolution: {integrity: sha512-WhAFut2LNPBR4dRgy030fWOaoa2FrcEw0pHSRzpGcGdctW7Y0y5wVEU+7zYK2QKwVubQ5OOkDvcM7SqtqJKHsA==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -2594,6 +2599,10 @@ snapshots:
     optional: true
 
   '@pnpm/deps.graph-sequencer@1100.0.1': {}
+
+  '@repobuddy/upx@0.1.1':
+    dependencies:
+      semver: 7.8.5
 
   '@rolldown/binding-android-arm-eabi@1.2.10':
     optional: true
@@ -3919,8 +3928,9 @@ snapshots:
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
 
-  universal-plugin@0.7.0:
+  universal-plugin@0.9.0:
     dependencies:
+      '@repobuddy/upx': 0.1.1
       '@toon-format/toon': 4.1.1
       commander: 14.0.3
       semver: 7.8.5
