@@ -1,7 +1,7 @@
 {
 	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
 	"name": "buddy-changesets",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "Changesets skills for AI agents — set up releases and write changeset files.",
 	"author": {
 		"name": "repobuddy"
