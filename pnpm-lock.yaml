@@ -16,7 +16,7 @@ importers:
         version: 2.11.3
       universal-plugin:
         specifier: ^0.11.0
-        version: 0.11.2
+        version: 0.11.3
 
   apps/web:
     dependencies:
@@ -1851,8 +1851,8 @@ packages:
   unist-util-visit@5.1.0:
     resolution: {integrity: sha512-m+vIdyeCOpdr/QeQCu2EzxX/ohgS8KbnPDgFni4dQsfSCtpz8UqDyY5GjRru8PDKuYn7Fq19j1CQ+nJSsGKOzg==}
 
-  universal-plugin@0.11.2:
-    resolution: {integrity: sha512-OPoC9alNe7U+Vc/rJNNNxsIdMr+hB9OUjz4TIphTjTWdeHlMdNGT9kVDmTw4rQBUEod8Y62nLl60Wbj4jinJiA==}
+  universal-plugin@0.11.3:
+    resolution: {integrity: sha512-79G+1WGE7bODPV6WmOQwQ5l9xd03BcwLeZCQHClEEBF+ZbW3I5uNQtvdBwiCCdoxtJ0K/pXYkasshTMHytBoxw==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -3934,7 +3934,7 @@ snapshots:
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
 
-  universal-plugin@0.11.2:
+  universal-plugin@0.11.3:
     dependencies:
       '@cyberuni/agent-harness': 0.3.0
       '@repobuddy/upx': 0.2.0
