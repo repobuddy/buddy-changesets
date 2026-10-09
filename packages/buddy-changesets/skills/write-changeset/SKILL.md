@@ -1,10 +1,10 @@
 ---
-name: add-changeset
+name: write-changeset
 description: "Internal skill: write a changeset file for the current change. Called by the `changesets` gateway in `add` mode, and by `review-changesets` when a pending changeset is missing."
 user-invocable: false
 ---
 
-# Add Changeset
+# Write Changeset
 
 Called by the **`changesets`** gateway. It has already confirmed `.changeset/config.json` exists.
 

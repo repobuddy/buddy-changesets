@@ -15,7 +15,7 @@ export default defineConfig({
 					items: [
 						{ label: 'changesets', link: '/skills/changesets/' },
 						{ label: 'init-changesets', link: '/skills/init-changesets/' },
-						{ label: 'add-changeset', link: '/skills/add-changeset/' },
+						{ label: 'write-changeset', link: '/skills/write-changeset/' },
 						{ label: 'review-changesets', link: '/skills/review-changesets/' },
 					],
 				},

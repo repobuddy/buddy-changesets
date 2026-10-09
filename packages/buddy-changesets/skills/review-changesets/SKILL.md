@@ -14,7 +14,7 @@ Every pending changeset in `.changeset/` becomes a `CHANGELOG.md` entry verbatim
 
 ### 1. Load the criteria
 
-Load **`add-changeset`**. It owns the criteria this skill audits against — what warrants a changeset, which bump type, and the body rules. Do not restate or re-derive them here; a rule that needs changing gets changed there.
+Load **`write-changeset`**. It owns the criteria this skill audits against — what warrants a changeset, which bump type, and the body rules. Do not restate or re-derive them here; a rule that needs changing gets changed there.
 
 Then run it for the current change, so a missing changeset is written before the review. If it concludes no changeset is needed, say so and continue — reviewing what is already pending is still worthwhile.
 
@@ -39,11 +39,11 @@ Substitute the repo's actual base branch when it is not `main`.
 
 ### 3. Check each changeset
 
-Four checks. The first two apply `add-changeset`'s criteria to a file that already exists; the last two are review-only — they need the whole set of pending files, which the author of any single changeset could not see.
+Four checks. The first two apply `write-changeset`'s criteria to a file that already exists; the last two are review-only — they need the whole set of pending files, which the author of any single changeset could not see.
 
-**Does it belong?** Apply `add-changeset`'s **When a Changeset Is Warranted**. A changeset whose change fails that test gets deleted — most often one covering only a `devDependencies` bump, CI or tooling, tests, or an internal refactor. A runtime `dependencies` bump that does qualify usually still needs rewriting to say what changed for the consumer rather than which version moved.
+**Does it belong?** Apply `write-changeset`'s **When a Changeset Is Warranted**. A changeset whose change fails that test gets deleted — most often one covering only a `devDependencies` bump, CI or tooling, tests, or an internal refactor. A runtime `dependencies` bump that does qualify usually still needs rewriting to say what changed for the consumer rather than which version moved.
 
-**Is the body up to standard?** Apply `add-changeset`'s **Body rules** and its breaking-change requirement. Fix what falls short; leave a body that already meets the bar alone rather than rewording it for style.
+**Is the body up to standard?** Apply `write-changeset`'s **Body rules** and its breaking-change requirement. Fix what falls short; leave a body that already meets the bar alone rather than rewording it for style.
 
 **Is it accurate?** This is what a review can check and the author could not — the file against what actually landed:
 
@@ -78,7 +78,7 @@ Do not stage or commit; leave the changes for the user's own commit unless they 
 ## Verification
 
 - [ ] Every file in `.changeset/` was read, not just the ones touched on this branch
-- [ ] Each remaining changeset passes `add-changeset`'s warranted test and body rules
+- [ ] Each remaining changeset passes `write-changeset`'s warranted test and body rules
 - [ ] Bump types match the final diff, with `fixed` groups consistent
 - [ ] Duplicate and already-released entries are gone
 - [ ] Deletions and bump changes were confirmed with the user

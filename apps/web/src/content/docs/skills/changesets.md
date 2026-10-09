@@ -29,7 +29,7 @@ it before merging or cutting a release, when pending changesets are already sitt
 
 ## What review mode checks
 
-Two checks reuse the rules [`add-changeset`](/buddy-changesets/skills/add-changeset/)
+Two checks reuse the rules [`write-changeset`](/buddy-changesets/skills/write-changeset/)
 writes to, so a changeset is reviewed against the standard it was authored to:
 
 - **Does it belong** — deletes changesets covering only devDependency bumps, CI and
@@ -50,7 +50,7 @@ It never touches `CHANGELOG.md`.
 
 The gateway loads these; they are not triggered on their own.
 
-- [`add-changeset`](/buddy-changesets/skills/add-changeset/) — writes the changeset file,
+- [`write-changeset`](/buddy-changesets/skills/write-changeset/) — writes the changeset file,
   and owns the criteria.
 - [`review-changesets`](/buddy-changesets/skills/review-changesets/) — audits the pending
-  changesets, loading `add-changeset` for those criteria rather than restating them.
+  changesets, loading `write-changeset` for those criteria rather than restating them.

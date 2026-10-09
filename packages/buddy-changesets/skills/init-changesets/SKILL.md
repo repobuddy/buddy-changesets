@@ -377,7 +377,7 @@ Tell the user that changeset files are added via the **`changesets`** skill, and
 ## Anti-patterns
 
 - Preloading reference files before detection matches them
-- Duplicating `add-changeset`'s bump-type and summary rules here
+- Duplicating `write-changeset`'s bump-type and summary rules here
 - Setting `"commit": true` when CI runs `changesets/action`
 - Promising a Version Packages PR on non-GitHub CI
 - Hand-editing a version in `plugin.json` or a vendor manifest, or running a plugin CLI's own

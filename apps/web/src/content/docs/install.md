@@ -20,7 +20,7 @@ npx skills add repobuddy/buddy-changesets --skill changesets -g
 npx skills add repobuddy/buddy-changesets --skill changesets -a claude-code -g
 ```
 
-Install `changesets` together with its `add-changeset` and `review-changesets`
+Install `changesets` together with its `write-changeset` and `review-changesets`
 sub-skills — the gateway loads them, and neither triggers on its own.
 
 ## As a Claude Code plugin
