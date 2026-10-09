@@ -12,7 +12,7 @@ Gateway for working with changeset files in a repo that already has changesets i
 
 | The user wants | Mode | Load |
 |---|---|---|
-| A changeset for the change they just made | `add` | **`add-changeset`** |
+| A changeset for the change they just made | `add` | **`write-changeset`** |
 | The pending changesets checked, or checked and a missing one added | `review` | **`review-changesets`** |
 
 Pick from what the user asked for:

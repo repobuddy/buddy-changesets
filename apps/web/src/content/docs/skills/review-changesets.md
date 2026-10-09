@@ -14,7 +14,7 @@ detail, or an entry that should not ship at all.
 
 ## Workflow
 
-1. **Load the criteria.** It loads [`add-changeset`](/buddy-changesets/skills/add-changeset/),
+1. **Load the criteria.** It loads [`write-changeset`](/buddy-changesets/skills/write-changeset/),
    which owns what warrants a changeset, which bump type, and the body rules, then runs it
    for the current change so a missing changeset is written before the review.
 2. **Gather the pending set.** Every `.md` file in `.changeset/` except `README.md`, plus

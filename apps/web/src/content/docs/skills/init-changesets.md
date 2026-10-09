@@ -34,7 +34,7 @@ To add or review a changeset in an existing setup, use
 ## What you need
 
 - A repository with at least one `package.json`.
-- An npm automation token stored as `NPM_TOKEN` in the CI secrets, for publishing.
+- On GitHub, an npm trusted publisher registered for the release workflow. Other CI platforms, or packages without a trusted publisher, need an npm automation token stored as `NPM_TOKEN` in the CI secrets.
 - On GitHub, a PAT stored as `RELEASE_TOKEN` only if branch protection blocks the Version
   Packages PR.
 

@@ -19,7 +19,7 @@ To set changesets up in the first place, use **init-changesets** instead.
 
 ## What it checks in review mode
 
-Two of the checks reuse the rules `add-changeset` writes to, so a changeset is
+Two of the checks reuse the rules `write-changeset` writes to, so a changeset is
 reviewed against the standard it was authored to:
 
 - **Does it belong** — deletes changesets covering only devDependency bumps, CI
@@ -39,7 +39,7 @@ It edits the files in place and asks first before deleting one or changing a bum
 
 The gateway loads these; they are not triggered on their own.
 
-- `add-changeset` — writes the changeset file, and owns the criteria: what
+- `write-changeset` — writes the changeset file, and owns the criteria: what
   warrants a changeset, which bump type, and the body rules.
-- `review-changesets` — audits the pending changesets, loading `add-changeset`
+- `review-changesets` — audits the pending changesets, loading `write-changeset`
   for those criteria rather than restating them.

@@ -120,7 +120,7 @@ Replace the generated config. Set `baseBranch` to the repo's default branch if n
 
 ```json
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "$schema": "https://unpkg.com/@changesets/config@4.0.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "baseBranch": "main",
@@ -238,11 +238,11 @@ jobs:
           version-script: <pm> run version
           publish-script: <pm> run release
           github-token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-**Plugin repo:** drop the `publish-script:` input and `NPM_TOKEN` (`publish:` on action v1). With the
+The job publishes to npm through trusted publishing: `id-token: write` lets npm exchange the job's OIDC identity for a short-lived credential, so no token secret is stored. If the repo cannot use trusted publishing, add the legacy `NPM_TOKEN` env (see Secrets).
+
+**Plugin repo:** drop the `publish-script:` input (`publish:` on action v1). With the
 version script alone the action opens the Version Packages PR, and merging it tags the release; the
 marketplace update is a separate job triggered on that tag.
 
@@ -319,8 +319,6 @@ jobs:
           version-script: <pm> run version
           publish-script: <pm> run release
           github-token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
 In each consuming repo:
@@ -345,8 +343,12 @@ Load the common non-GitHub pattern, then the detected platform's file — both l
 
 ### 6. Secrets
 
-- `NPM_TOKEN` — npm automation token, from the npm account's access-token settings; not needed by a
-  plugin repo that publishes nothing to npm
+- npm trusted publishing (GitHub) — no secret. On npmjs.com, register the workflow file as the
+  package's trusted publisher (**Settings → Trusted Publisher**); the workflow's `id-token: write`
+  does the rest. Not needed by a plugin repo that publishes nothing to npm
+- `NPM_TOKEN` — legacy npm automation token, only for CI platforms without npm trusted publishing
+  (non-GitHub CI) or a package that has not registered a trusted publisher; add it to the
+  `changesets/action` step as `env: NPM_TOKEN: ${{ secrets.NPM_TOKEN }}`
 - `RELEASE_TOKEN` — optional GitHub PAT, only if branch protection blocks the Version Packages PR
 
 ### 7. Verify and hand off
@@ -377,7 +379,7 @@ Tell the user that changeset files are added via the **`changesets`** skill, and
 ## Anti-patterns
 
 - Preloading reference files before detection matches them
-- Duplicating `add-changeset`'s bump-type and summary rules here
+- Duplicating `write-changeset`'s bump-type and summary rules here
 - Setting `"commit": true` when CI runs `changesets/action`
 - Promising a Version Packages PR on non-GitHub CI
 - Hand-editing a version in `plugin.json` or a vendor manifest, or running a plugin CLI's own

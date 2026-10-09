@@ -1,5 +1,5 @@
 ---
-title: add-changeset
+title: write-changeset
 description: Sub-skill that writes the changeset file and owns the criteria for what warrants one.
 ---
 
