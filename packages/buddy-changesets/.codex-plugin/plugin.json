@@ -1,6 +1,6 @@
 {
 	"name": "buddy-changesets",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "Changesets skills for AI agents — set up releases and write changeset files.",
 	"author": {
 		"name": "repobuddy"
