@@ -71,15 +71,17 @@ Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning
 
 Skip if `.changeset/` already exists.
 
+The CLI is not installed yet, so this fetches it. Use the exact version shown in every variant:
+
 ```bash
 # pnpm
-pnpm dlx @changesets/cli@3 init
+pnpm dlx @changesets/cli@3.0.3 init
 
 # bun
-bunx @changesets/cli@3 init
+bunx @changesets/cli@3.0.3 init
 
 # npm / yarn
-npx @changesets/cli@3 init
+npx @changesets/cli@3.0.3 init
 ```
 
 Creates `.changeset/config.json` and `.changeset/README.md`.
@@ -362,8 +364,10 @@ grep -rn 'changesets/action@' .github/workflows/   # follow a `uses:` to the sha
 
 `cli ^3` needs `action@v2` with the `-script` input names; `cli ^2` needs `action@v1`. A mismatch is the failure, whatever else is green.
 
+`@changesets/cli` is now a dev dependency, so run its local binary rather than fetching one. `<pm-exec>` is `pnpm exec`, `npx --no-install`, `yarn`, or `bun run`:
+
 ```bash
-npx changeset add --empty
+<pm-exec> changeset add --empty
 ls .changeset/
 gh workflow list   # GitHub only
 ```
@@ -371,7 +375,7 @@ gh workflow list   # GitHub only
 On an existing repo with pending changesets, confirm they still parse — this is what proves an upgrade did not strand a release:
 
 ```bash
-<pm> exec changeset status
+<pm-exec> changeset status
 ```
 
 Tell the user that changeset files are added via the **`changesets`** skill, and that versions and `CHANGELOG.md` on the Version Packages PR are generated — never hand-edited.

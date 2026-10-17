@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Pinned @changesets/cli version in skill commands",
+      "managerFilePatterns": ["/^packages/buddy-changesets/skills/.+\\.md$/"],
+      "matchStrings": ["(?<depName>@changesets/cli)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "npm"
+    }
   ]
 }
