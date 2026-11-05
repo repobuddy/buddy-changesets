@@ -1,5 +1,12 @@
 # buddy-changesets
 
+## 3.0.1
+
+### Patch Changes
+
+- 97ec407: `init-changesets` now pins the CLI it fetches for `changeset init` to an exact version, the same in every package manager's command. After init, it runs the installed `changeset` binary through the repository's package manager instead of fetching an unpinned copy with `npx`.
+- 6bb6c4b: `write-changeset` no longer sends a `docs:` or `chore:` commit that changes shipped agent configuration to "no changeset needed". `init-changesets` dates its note on npm 12's `npm info --json` output.
+
 ## 3.0.0
 
 ### Major Changes
