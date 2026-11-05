@@ -144,7 +144,7 @@ Parse conventional commit prefixes to inform bump type and summary:
 | `feat:` / `feat(scope):` | at least `minor` |
 | `fix:` / `fix(scope):` | at least `patch` |
 | `BREAKING CHANGE:` footer or `!` after type | `major` |
-| `chore:`, `ci:`, `test:`, `docs:` | no changeset needed |
+| `chore:`, `ci:`, `test:`, `docs:` | no changeset needed, unless the diff touches shipped agent configuration |
 
 Use the commit message body / subject as a starting point for the changeset summary, rewritten to be user-facing (imperative mood, no implementation details).
 

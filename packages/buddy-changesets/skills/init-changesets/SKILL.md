@@ -202,7 +202,7 @@ Changesets CLI v2 is not supported; use Changesets action v1 instead, which is c
 
 The renamed inputs are **silently ignored** under the wrong major, so a half-done bump leaves the action running with no publish script. Change both sides in one commit.
 
-New repos get **CLI v3 + action v2**. Staying on v2 is not a safe hold: npm 12 changed `npm info --json` to emit an array, and CLI 2.x reads `.versions` off the parsed object — it comes back `undefined`, every version looks unpublished, and the release republishes into npm's E403.
+New repos get **CLI v3 + action v2**. Staying on v2 is not a safe hold: npm 12 changed `npm info --json` to emit an array (verified with npm 12.1.0 on 2026-11-04), and CLI 2.x reads `.versions` off the parsed object — it comes back `undefined`, every version looks unpublished, and the release republishes into npm's E403.
 
 #### GitHub Actions — Option A (inline)
 
