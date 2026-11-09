@@ -227,9 +227,9 @@ Once the changeset is merged to the base branch, the CI release workflow (`chang
 1. Open or update a **"Version Packages"** PR that bumps `package.json` versions and updates `CHANGELOG.md`
 2. When that PR is merged, publish to npm and create GitHub releases
 
-In a plugin repo, the release also carries the new number from `package.json` into the plugin
-manifests — `universal-plugin publish sync-version` then `plugin build`, where that toolchain is in
-use. Never hand-edit a `version` field in `plugin.json` or a vendor manifest; it is derived, the same
+In a plugin repo, the Version Packages PR also carries the new number from `package.json` into the
+plugin manifests and marketplace catalogs, through the repo's `version` script. Merging it creates a
+git tag and a GitHub release instead of an npm publish. Never hand-edit a `version` field in `plugin.json` or a vendor manifest; it is derived, the same
 way `CHANGELOG.md` is.
 
 The gateway's boundaries apply: never edit `CHANGELOG.md`, and never add a changeset to a "Version Packages" PR.

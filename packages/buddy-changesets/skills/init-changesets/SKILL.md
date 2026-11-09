@@ -144,6 +144,11 @@ where the number lives. A plugin repo without one needs a minimal file, nothing 
 `privatePackages` then lets changesets bump and tag it; the tag is what triggers the real release.
 Leave `"access"` out — nothing publishes to npm.
 
+`tag: true` tags **every** private workspace project that has a `version`, so a docs app or an
+internal tool would be tagged on each release too. Run `<pm-exec> changeset publish-plan --output
+plan.json` and check that only the plugin packages are listed as `tag-only`. Remove the `version`
+field from any other private project, or list it in `"ignore"`.
+
 Key decisions:
 
 - `"access": "public"` — required to publish scoped packages (`@scope/name`) publicly
@@ -168,21 +173,38 @@ Key decisions:
 
 If a build must run before publish: `"release": "<pm> build && changeset publish"`.
 
-**Plugin repo:** there is no `release` script — nothing goes to npm. Instead `version` chains the
-step that carries the released number out of `package.json` into the plugin manifests, which are
-derived and must never be hand-edited. Detect the toolchain rather than assuming one: where
-`.agents/universal-plugin.json` exists, that step is
+**Plugin repo:** changesets has no plugin API for other version files, so both halves of the
+release are scripts around the CLI.
+
+- `version` chains the step that carries the released number out of `package.json` into the plugin
+  manifests and the repository's marketplace catalog entries. These are derived and must never be
+  hand-edited.
+- `release` stays `changeset publish`. For a `private: true` package with `privatePackages.tag` it
+  runs no `npm publish`. It only creates the `<name>@<version>` git tag (`v<version>` in a
+  single-package repo) and records it in the CLI's output report.
+
+Detect the toolchain rather than assuming one:
+
+| Detected | `version` script |
+|---|---|
+| `.agents/universal-plugin.json` | `changeset version && universal-plugin publish sync-version && universal-plugin plugin build` (add `--root <dir>` to both for a plugin in a subdirectory) |
+| The repo already has a command that propagates the version | `changeset version && <that command>` |
+| Neither | Copy `scripts/sync-plugin-version.mjs` from this skill into the repo's `scripts/`, then `changeset version && node scripts/sync-plugin-version.mjs <plugin-dir ...>` |
 
 ```json
 {
   "scripts": {
-    "version": "changeset version && universal-plugin publish sync-version && universal-plugin plugin build",
+    "version": "changeset version && node scripts/sync-plugin-version.mjs",
+    "release": "changeset publish",
     "cs": "changeset"
   }
 }
 ```
 
-Otherwise use whatever command the repo already has for propagating the version to its manifests.
+The bundled script needs no dependencies. For each plugin directory (default `.`) it writes the
+`package.json` version into whichever of `plugin.json`, `.claude-plugin/`, `.cursor-plugin/`,
+`.codex-plugin/`, and `.github/plugin/` `plugin.json` exist. It also updates the `version` of
+every entry in the root marketplace catalogs whose relative `source` points at that directory.
 
 ### 5. CI release workflow
 
@@ -244,9 +266,18 @@ jobs:
 
 The job publishes to npm through trusted publishing: `id-token: write` lets npm exchange the job's OIDC identity for a short-lived credential, so no token secret is stored. If the repo cannot use trusted publishing, add the legacy `NPM_TOKEN` env (see Secrets).
 
-**Plugin repo:** drop the `publish-script:` input (`publish:` on action v1). With the
-version script alone the action opens the Version Packages PR, and merging it tags the release; the
-marketplace update is a separate job triggered on that tag.
+**Plugin repo:** keep `publish-script: <pm> run release` and drop `id-token: write`, since nothing
+goes to npm. Without a publish script the action does nothing after the Version Packages PR merges,
+so no tag or release ever marks the version. With it, action v2 runs `changeset publish` and reads
+the `git-tag` events from the CLI's output report (`CHANGESETS_OUTPUT`). It then pushes each tag
+and creates a GitHub release for it (`create-github-releases` defaults to `true`). That tag is the
+ref users install from.
+
+A marketplace in **another** repository that pins this plugin by `ref` or `sha` needs its own
+update. Trigger it from the release, either with a `release: published` workflow or with a
+follow-up step gated on the action's `published` output. A workflow triggered by
+`GITHUB_TOKEN` does not start other workflows, so a cross-repo `release` trigger needs a PAT or a
+GitHub App token in `github-token:`.
 
 Replace `<pm>` and `<install-command>` from step 1. **Package manager setup:**
 
@@ -372,6 +403,16 @@ ls .changeset/
 gh workflow list   # GitHub only
 ```
 
+**Plugin repo:** confirm the release only tags, and only the plugin packages:
+
+```bash
+<pm-exec> changeset publish-plan --output plan.json && cat plan.json && rm plan.json
+```
+
+Every entry must be `"kind": "tag-only"` for a plugin package. A `"kind": "npm"` entry means a
+package is not `private`, and one more `tag-only` entry is a private project to remove the version
+from or ignore.
+
 On an existing repo with pending changesets, confirm they still parse — this is what proves an upgrade did not strand a release:
 
 ```bash
@@ -388,6 +429,8 @@ Tell the user that changeset files are added via the **`changesets`** skill, and
 - Promising a Version Packages PR on non-GitHub CI
 - Hand-editing a version in `plugin.json` or a vendor manifest, or running a plugin CLI's own
   `version` command in a changesets repo — it picks a number changesets is about to pick again
+- Dropping `publish-script` in a plugin repo because nothing goes to npm — the tag and GitHub
+  release come from that step
 
 ## References
 

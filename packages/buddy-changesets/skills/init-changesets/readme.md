@@ -17,6 +17,8 @@ To add or review a changeset in an existing setup, use **changesets** instead.
 5. Writes the release workflow — an inline GitHub Actions workflow, a shared one in your `<org>/.github` repo, or the equivalent for GitLab, CircleCI, Bitbucket, Azure Pipelines, Jenkins, Travis, or Drone.
 6. Tells you which secrets to add and verifies the setup.
 
+In an agent plugin repo that publishes nothing to npm, the `version` script also syncs the plugin manifests and marketplace catalogs to the new version, and `release` creates a git tag and GitHub release instead of an npm publish. Where the repo has no tool for the manifest sync, the skill copies in its dependency-free `scripts/sync-plugin-version.mjs`.
+
 ## What you need
 
 - A repository with at least one `package.json`.
