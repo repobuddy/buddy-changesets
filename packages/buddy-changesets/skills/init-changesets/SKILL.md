@@ -187,24 +187,24 @@ Detect the toolchain rather than assuming one:
 
 | Detected | `version` script |
 |---|---|
-| `.agents/universal-plugin.json` | `changeset version && universal-plugin publish sync-version && universal-plugin plugin build` (add `--root <dir>` to both for a plugin in a subdirectory) |
+| `.agents/universal-plugin.json`, universal-plugin 0.17 or later | `changeset version && universal-plugin plugin version --from-package` |
+| `.agents/universal-plugin.json`, an older universal-plugin | `changeset version && universal-plugin publish sync-version && universal-plugin plugin build` (deprecated in 0.17) |
 | The repo already has a command that propagates the version | `changeset version && <that command>` |
-| Neither | Copy `scripts/sync-plugin-version.mjs` from this skill into the repo's `scripts/`, then `changeset version && node scripts/sync-plugin-version.mjs <plugin-dir ...>` |
+| Neither | Offer to adopt universal-plugin (the `init-universal-plugin` skill), then use the first row. Do not write a sync script |
+
+For a plugin in a subdirectory, add `--root <dir>` to each `universal-plugin` call.
+`plugin version --from-package` stamps the `package.json` version into `plugin.json`, the vendor
+manifests, the marketplace catalogs, and the skill pins.
 
 ```json
 {
   "scripts": {
-    "version": "changeset version && node scripts/sync-plugin-version.mjs",
+    "version": "changeset version && universal-plugin plugin version --from-package",
     "release": "changeset publish",
     "cs": "changeset"
   }
 }
 ```
-
-The bundled script needs no dependencies. For each plugin directory (default `.`) it writes the
-`package.json` version into whichever of `plugin.json`, `.claude-plugin/`, `.cursor-plugin/`,
-`.codex-plugin/`, and `.github/plugin/` `plugin.json` exist. It also updates the `version` of
-every entry in the root marketplace catalogs whose relative `source` points at that directory.
 
 ### 5. CI release workflow
 

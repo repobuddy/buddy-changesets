@@ -20,6 +20,9 @@ it detects a plugin repository.
 
 1. **The plugin package is private.** Its `package.json` has `"private": true` and
    holds the version. A plugin without a `package.json` gets a minimal one.
+   Changesets cannot run without one: `changeset version`, `changeset publish`,
+   `changesets/action`, and changesets-gitlab all find packages by reading
+   `package.json`, and changesets has no plugin API to change that.
 2. **Changesets versions and tags private packages.** In `.changeset/config.json`:
 
    ```json
@@ -40,36 +43,27 @@ it detects a plugin repository.
 
 ## Scripts
 
-Pick the sync step by the tool the repository already uses:
+[universal-plugin](https://github.com/cyberuni/universal-plugin) does the sync step:
 
 | Repository | Sync step |
 |---|---|
-| Uses [universal-plugin](https://github.com/cyberuni/universal-plugin) | `universal-plugin publish sync-version && universal-plugin plugin build` |
+| universal-plugin 0.17 or later | `universal-plugin plugin version --from-package` |
+| An older universal-plugin | `universal-plugin publish sync-version && universal-plugin plugin build` |
 | Has its own version-sync command | That command |
-| Neither | `node scripts/sync-plugin-version.mjs`, copied from the skill |
 
 ```json
 {
   "scripts": {
-    "version": "changeset version && node scripts/sync-plugin-version.mjs",
+    "version": "changeset version && universal-plugin plugin version --from-package",
     "release": "changeset publish",
     "cs": "changeset"
   }
 }
 ```
 
-`sync-plugin-version.mjs` has no dependencies. It takes plugin directories as arguments
-(default `.`). For each one it writes the `package.json` version into whichever of
-these files exist:
-
-- `plugin.json`
-- `.claude-plugin/plugin.json`
-- `.cursor-plugin/plugin.json`
-- `.codex-plugin/plugin.json`
-- `.github/plugin/plugin.json`
-
-It also updates the `version` of each entry in the repository's marketplace catalogs
-whose relative `source` points at that directory.
+`plugin version --from-package` stamps the `package.json` version into `plugin.json`,
+the vendor manifests, the repository's marketplace catalogs, and the skill pins. Add
+`--root <dir>` for a plugin in a subdirectory.
 
 ## Release workflow
 
