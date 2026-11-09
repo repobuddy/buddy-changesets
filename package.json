@@ -5,6 +5,7 @@
 	"scripts": {
 		"build": "turbo build",
 		"cs": "changeset",
+		"release": "changeset publish",
 		"version": "changeset version && universal-plugin publish sync-version --root packages/buddy-changesets && universal-plugin plugin build --root packages/buddy-changesets",
 		"web": "pnpm --filter website"
 	},
