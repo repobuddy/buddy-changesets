@@ -31,10 +31,14 @@ To add or review a changeset in an existing setup, use
    Pipelines, Jenkins, Travis, or Drone.
 6. Tells you which secrets to add, and verifies the setup.
 
+In an agent plugin repository that publishes nothing to npm, the scripts and workflow
+instead sync the plugin manifests and create a git tag and GitHub release. See
+[Releasing agent plugins](/buddy-changesets/plugin-releases/).
+
 ## What you need
 
 - A repository with at least one `package.json`.
-- On GitHub, an npm trusted publisher registered for the release workflow. Other CI platforms, or packages without a trusted publisher, need an npm automation token stored as `NPM_TOKEN` in the CI secrets.
+- On GitHub, for a package published to npm, an npm trusted publisher registered for the release workflow. Other CI platforms, or packages without a trusted publisher, need an npm automation token stored as `NPM_TOKEN` in the CI secrets.
 - On GitHub, a PAT stored as `RELEASE_TOKEN` only if branch protection blocks the Version
   Packages PR.
 

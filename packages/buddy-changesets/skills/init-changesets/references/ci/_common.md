@@ -10,7 +10,11 @@ git config user.email "ci@bot" && git config user.name "CI Bot"
 git add . && git commit -m "chore: version packages" || true
 git push || true   # adapt push URL/auth per platform (see platform file)
 <pm> run release
+git push --tags     # `changeset publish` only creates tags locally
 ```
+
+In a plugin repo, `release` is still `changeset publish`. It only creates the plugin's git tag, and
+the pushed tag is the release. Create the platform's release object from that tag if it has one.
 
 There is no **Version Packages** PR on non-GitHub CI — version bump and publish happen in one pipeline run.
 

@@ -5,13 +5,14 @@
 	"scripts": {
 		"build": "turbo build",
 		"cs": "changeset",
-		"version": "changeset version && universal-plugin publish sync-version --root packages/buddy-changesets && universal-plugin plugin build --root packages/buddy-changesets",
+		"release": "changeset publish",
+		"version": "changeset version && universal-plugin plugin version --from-package --root packages/buddy-changesets",
 		"web": "pnpm --filter website"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^3.0.2",
 		"turbo": "^2.10.8",
-		"universal-plugin": "^0.11.0"
+		"universal-plugin": "^0.17.1"
 	},
 	"packageManager": "pnpm@12.16.1",
 	"engines": {

@@ -9,7 +9,7 @@ export default defineConfig({
 			title: 'Buddy Changesets',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/repobuddy/buddy-changesets' }],
 			sidebar: [
-				{ label: 'Guide', items: [{ label: 'Overview', link: '/' }, { label: 'Install', link: '/install/' }] },
+				{ label: 'Guide', items: [{ label: 'Overview', link: '/' }, { label: 'Install', link: '/install/' }, { label: 'Releasing agent plugins', link: '/plugin-releases/' }] },
 				{
 					label: 'Skills',
 					items: [
