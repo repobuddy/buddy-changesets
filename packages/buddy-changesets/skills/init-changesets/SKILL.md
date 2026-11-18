@@ -71,17 +71,10 @@ Trigger phrases: `'add changesets'`, `'set up releases'`, `'configure versioning
 
 Skip if `.changeset/` already exists.
 
-The CLI is not installed yet, so this fetches it. Use the exact version shown in every variant:
+The CLI is not installed yet, so this fetches it:
 
 ```bash
-# pnpm
-pnpm dlx @changesets/cli@3.0.3 init
-
-# bun
-bunx @changesets/cli@3.0.3 init
-
-# npm / yarn
-npx @changesets/cli@3.0.3 init
+node <this skill's folder>/scripts/changeset.mjs init
 ```
 
 Creates `.changeset/config.json` and `.changeset/README.md`.
