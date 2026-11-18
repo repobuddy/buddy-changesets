@@ -3,3 +3,6 @@ packages:
   - "packages/*"
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  # remove after 2026-11-19 (universal-plugin@0.22.0 passes the minimum release age by then)
+  - universal-plugin@0.22.0
