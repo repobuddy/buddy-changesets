@@ -19,6 +19,13 @@
 	"extensions": {
 		"org.cyberuni.universal-plugin": {
 			"skills": "./skills/",
+			"scripts": {
+				"skills/init-changesets/scripts/changeset.mjs": {
+					"forward": "changeset",
+					"package": "@changesets/cli",
+					"version": "3.0.3"
+				}
+			},
 			"vendors": [
 				"claude-code",
 				"cursor",
