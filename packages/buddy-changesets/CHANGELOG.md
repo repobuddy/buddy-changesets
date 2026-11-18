@@ -1,5 +1,12 @@
 # buddy-changesets
 
+## 3.1.1
+
+### Patch Changes
+
+- 357568f: `init-changesets` runs `changeset init` through a forwarding script pinned to `@changesets/cli@3.0.3`, one command for every package manager.
+- eaef5ea: Upgrade universal-plugin to 0.22.0.
+
 ## 3.1.0
 
 ### Minor Changes
