@@ -7,6 +7,7 @@
 		"check": "universal-plugin plugin build --check --root packages/buddy-changesets",
 		"check-version": "universal-plugin publish check-version --root packages/buddy-changesets",
 		"cs": "changeset",
+		"verify": "pnpm build && pnpm check && pnpm check-version",
 		"release": "changeset publish",
 		"version": "changeset version && universal-plugin plugin version --from-package --root packages/buddy-changesets",
 		"web": "pnpm --filter website"
