@@ -3,8 +3,11 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"build": "turbo build",
+		"build": "turbo build && universal-plugin plugin build --root packages/buddy-changesets",
+		"check": "universal-plugin plugin build --check --root packages/buddy-changesets",
+		"check-version": "universal-plugin publish check-version --root packages/buddy-changesets",
 		"cs": "changeset",
+		"verify": "pnpm build && pnpm check && pnpm check-version",
 		"release": "changeset publish",
 		"version": "changeset version && universal-plugin plugin version --from-package --root packages/buddy-changesets",
 		"web": "pnpm --filter website"
@@ -12,7 +15,7 @@
 	"devDependencies": {
 		"@changesets/cli": "^3.0.2",
 		"turbo": "^2.10.8",
-		"universal-plugin": "^0.20.0"
+		"universal-plugin": "^0.22.0"
 	},
 	"packageManager": "pnpm@12.18.0",
 	"engines": {
